@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer Remote</title>
+    <!-- 🚨 REQUIRED: Official Telegram Web App Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { 
+            background-color: #121212; 
+            color: #ffffff; 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            text-align: center; 
+            user-select: none;
+        }
+        .slider-container { margin: 40px 0; background: #1e1e1e; padding: 20px; border-radius: 12px; }
+        label { color: #00e5ff; font-weight: bold; letter-spacing: 1px; }
+        .val-display { font-size: 3em; color: #ffffff; margin: 10px 0; }
+        input[type=range] { width: 100%; accent-color: #00e5ff; height: 8px; }
+        button { 
+            background: #00e5ff; color: #000; border: none; 
+            padding: 18px 20px; font-size: 1.2em; font-weight: bold; 
+            border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer;
+        }
+        .stop-btn { background: #333333; color: #ff4444; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <label>HOURS</label>
+        <div class="val-display" id="hrsVal">0</div>
+        <input type="range" id="hrs" min="0" max="10" value="0" oninput="document.getElementById('hrsVal').innerText = this.value">
+    </div>
+
+    <div class="slider-container">
+        <label>MINUTES</label>
+        <div class="val-display" id="minsVal">0</div>
+        <input type="range" id="mins" min="0" max="59" value="0" oninput="document.getElementById('minsVal').innerText = this.value">
+    </div>
+
+    <button onclick="startTimer()">🚀 START TIMER</button>
+    <button class="stop-btn" onclick="stopTimer()">⏹ STOP & RESET</button>
+
+    <script>
+        // Initialize Telegram Web App API
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Force the app to open full screen
+
+        function startTimer() {
+            let h = document.getElementById('hrs').value;
+            let m = document.getElementById('mins').value;
+            
+            // Force values to be exactly 2 digits (adds a leading zero if needed)
+            let hh = String(h).padStart(2, '0');
+            let mm = String(m).padStart(2, '0');
+            
+            // Send the exact 4-number format (e.g., /timer0230)
+            tg.sendData(`/timer${hh}${mm}`); 
+        }
+
+        function stopTimer() {
+            tg.sendData(`/stop`);
+        }
+    </script>
+</body>
+</html>
